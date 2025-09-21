@@ -1,0 +1,84 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class FileOperationsDemo {
+
+    /**
+     * Writes the specified content to a text file.
+     * If the file exists, it will overwrite the content.
+     *
+     * @param filename The name of the file to write to.
+     * @param content  The content to write into the file.
+     * @throws IOException if an I/O error occurs.
+     */
+    public static void writeFile(String filename, String content) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(content);
+        }
+    }
+
+    /**
+     * Reads and returns the contents of a text file.
+     *
+     * @param filename The name of the file to read from.
+     * @return The content of the file as a single String.
+     * @throws IOException if an I/O error occurs.
+     */
+    public static String readFile(String filename) throws IOException {
+        StringBuilder content = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append(System.lineSeparator());
+            }
+        }
+
+        return content.toString();
+    }
+
+    /**
+     * Modifies the content of a text file by appending new content at the end.
+     *
+     * @param filename The name of the file to modify.
+     * @param additionalContent The content to append to the file.
+     * @throws IOException if an I/O error occurs.
+     */
+    public static void modifyFileAppend(String filename, String additionalContent) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            writer.write(additionalContent);
+            writer.newLine();
+        }
+    }
+
+    /**
+     * Main method demonstrating file operations.
+     */
+    public static void main(String[] args) {
+        String filename = "example.txt";
+
+        try {
+            // Write initial content to the file
+            writeFile(filename, "Hello, world!\nThis is a sample file.");
+
+            // Read and display the file content
+            System.out.println("File content after writing:");
+            System.out.println(readFile(filename));
+
+            // Append new content to the file
+            modifyFileAppend(filename, "Appended line 1.");
+            modifyFileAppend(filename, "Appended line 2.");
+
+            // Read and display the file content after modification
+            System.out.println("File content after modification:");
+            System.out.println(readFile(filename));
+
+        } catch (IOException e) {
+            System.err.println("An error occurred during file operations: " + e.getMessage());
+        }
+    }
+}
